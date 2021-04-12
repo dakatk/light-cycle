@@ -13,9 +13,71 @@ export default function LightCycle(x, y, color) {
     this.color = color;
 }
 
-LightCycle.prototype.update = function(deltaTime) {
+LightCycle.prototype.update = function(deltaTime, canvasWidth, canvasHeight) {
     const front = this.paths[0];
     front.update(deltaTime);
+
+    let extension = undefined;
+
+    if (front.x < 0) {
+        extension = {
+            x: canvasWidth + front.x - 1,
+            y: front.y,
+            w: -front.x,
+            h: front.h
+        };
+    }
+    else if ((front.x + front.w) > canvasWidth) {
+        extension = {
+            x: 0,
+            y: front.y,
+            w: (front.x + front.w) - canvasWidth,
+            h: front.h
+        };
+    }
+
+    if (front.y < 0) {
+        let y = canvasHeight + front.y - 1;
+        let h = -front.y;
+
+        if (extension !== undefined) {
+            extension.y = y;
+            extension.h = h;
+        }
+        else {
+            extension = {
+                x: front.x,
+                y: y,
+                w: front.w,
+                h: h
+            };
+        }
+    }
+    else if ((front.y + front.h) > canvasHeight) {
+        let h = (front.y + front.h) - canvasHeight;
+
+        if (extension !== undefined) {
+            extension.y = 0;
+            extension.h = h;
+        }
+        else {
+            extension = {
+                x: front.x,
+                y: 0,
+                w: front.w,
+                h: h
+            };
+        }
+    }
+
+    if (extension !== undefined) {
+        let path = new Path(extension.x, extension.y, front.direction);
+
+        path.w = extension.w;
+        path.h = extension.h;
+
+        this.paths.unshift(path);
+    }
 }
 
 LightCycle.prototype.render = function(context) {

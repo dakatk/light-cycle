@@ -61,7 +61,7 @@ Game.prototype.update = function(deltaTime) {
         default:
             break;
     }
-    this.blueCycle.update(deltaTime);
+    this.blueCycle.update(deltaTime, this.canvasWidth, this.canvasHeight);
 
     if (this.blueCycle.collision(this.orangeCycle) || this.blueCycle.collision(this.blueCycle)) {
         if (this.banner !== undefined) {
@@ -71,7 +71,7 @@ Game.prototype.update = function(deltaTime) {
         return;
     }
 
-    this.orangeCycle.update(deltaTime);
+    this.orangeCycle.update(deltaTime, this.canvasWidth, this.canvasHeight);
 
     if (this.orangeCycle.collision(this.blueCycle) || this.orangeCycle.collision(this.orangeCycle)) {
         if (this.banner !== undefined) {
